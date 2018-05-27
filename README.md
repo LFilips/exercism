@@ -1,2 +1,4 @@
-# Repository with exercism exercise
+# Exercism
+
+Repository with the code of the exercise from exercism.io
 
