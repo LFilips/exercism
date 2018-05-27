@@ -1,0 +1,4 @@
+# Ignoring all target folder of sub project
+
+target/
+.idea/

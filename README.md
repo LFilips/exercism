@@ -1,1 +1,2 @@
-# exercism
+# Repository with exercism exercise
+
