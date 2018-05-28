@@ -1,22 +1,36 @@
 object Bob {
 
-  def response(statement: String): String = ???
-
-  def bobStateMachine: String => Unit = (statement: String) => {
-    statement.foldRight(Nothing: State)((char: Char, state: State) => nextState(state,char))
+  def response(statement: String): String = {
+    bobStateMachine(statement)
   }
 
-  def nextState = (state: State,char: Char) => {
+  def bobStateMachine: String => String = (statement: String) => {
+    val state = statement.foldLeft(Nothing: State)((state: State, char: Char) => nextState(state, char))
+    state.answer
+  }
+
+  /**
+    * This function calculate the next state according to the actual and the input char.
+    * @return the next state
+    */
+  def nextState: (State, Char) => State = (state: State, char: Char) => {
+    def notEmpty(x: Char): Boolean = {
+      x != ' '
+    }
+
     char match {
       case x if x.isUpper => state match {
         case Yell => YellQuestion
-        case _ => Question
+        case _ => Yell
       }
-      case '?' =>  state match {
+      case x if x.isLower => state match {
+        case _ => Whatever
+      }
+      case '?' => state match {
         case Yell => YellQuestion
         case _ => Question
       }
-      case x if x.isLetterOrDigit => state match {
+      case x if notEmpty(x) => state match {
         case Yell => Yell
         case YellQuestion => YellQuestion
         case Question => Question
@@ -28,19 +42,28 @@ object Bob {
 
   }
 
-
-  trait State
-
-  object Question extends State {
-    val answer= "Sure."
+  sealed abstract class State {
+    val answer: String
   }
 
-  object Yell extends State
+  object Question extends State {
+    override val answer: String = "Sure."
+  }
 
-  object YellQuestion extends State
+  object Yell extends State {
+    override val answer: String = "Whoa, chill out!"
+  }
 
-  object Whatever extends State
+  object YellQuestion extends State {
+    override val answer: String = "Calm down, I know what I'm doing!"
+  }
 
-  object Nothing extends State
+  object Whatever extends State {
+    override val answer: String = "Whatever."
+  }
+
+  object Nothing extends State {
+    override val answer: String = "Fine. Be that way!"
+  }
 
 }
